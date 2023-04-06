@@ -2,37 +2,37 @@ import pygame
 from typing import Tuple, List
 from ressources import *
 
-#Configuration de pygame
-pygame.init() # type: ignore
+# Configuration de pygame
+pygame.init()  # type: ignore
 screen = pygame.display.set_mode((LARGEUR, HAUTEUR))
 
-#Configuration des variables pour le défilement du sol
+# Configuration des variables pour le défilement du sol
 SOL1_pos = 0
 SOL2_pos = LARGEUR
 SPEED = 2.5
 DISTANCE = 0
 
+
 class Joueur:
-    def __init__(self,  BOB_X, BOB_Y, surface, G=0.05, V=0, isGravite=False, HAUTEUR_SAUT = 35, VITESSE = 2.5):
+    def __init__(self,  BOB_X, BOB_Y, surface, G=0.05, V=0, HAUTEUR_SAUT=35, VITESSE=2.5):
         self.BOB_X = BOB_X
         self.BOB_Y = BOB_Y
         self.G = G
         self.V = V
-        self.isGravite = isGravite
         self.HAUTEUR_SAUT = HAUTEUR_SAUT
         self.surface = surface
         self.VITESSE = VITESSE
         pass
 
-    def saut(self, frame:int)->Tuple[bool, int]:
+    def saut(self, frame: int) -> Tuple[bool, int]:
         """
         saut() permet de faire sauter BOB en l'affichant un peu plus haut à chaque appel.
         La fonction renvoie False quand l'animation est fini.
         """
         if frame < self.HAUTEUR_SAUT:
-            frame+=1
+            frame += 1
             screen.blit(FILL, (self.BOB_X, self.BOB_Y))
-            self.BOB_Y-=self.VITESSE
+            self.BOB_Y -= self.VITESSE
             screen.blit(BOB, (self.BOB_X, self.BOB_Y))
             return True, frame
         else:
@@ -43,11 +43,11 @@ class Joueur:
         gravite() permet d'appliquer une effet de gravité au joueur si il se situe dans les airs
         """
         if self.BOB_Y < self.surface:
-            self.V+=self.G
-            self.BOB_Y+=min(self.V, self.surface-self.BOB_Y)
+            self.V += self.G
+            self.BOB_Y += min(self.V, self.surface-self.BOB_Y)
         pass
 
-    def isDead(self, liste_obstacle:list)->bool:
+    def isDead(self, liste_obstacle: list) -> bool:
         """
         isDead() regarde si les coordonnées actuelle de BOB rentrent en collisions avec
         un obstacle éventuel
@@ -59,6 +59,7 @@ class Joueur:
                 return True
         return False
 
+
 class Obstacle:
     """
     pour les types:
@@ -66,14 +67,15 @@ class Obstacle:
         b = bloc
         bs = bloc surface
     """
-    def __init__(self, IMAGE, p1:List[float], p2:List[float], type:str):
+
+    def __init__(self, IMAGE, p1: List[float], p2: List[float], type: str):
         self.IMAGE = IMAGE
         self.p1 = p1
         self.p2 = p2
         self.type = type
         pass
 
-    def is_hit(self, xy1:List[float], xy2:List[float])->bool:
+    def is_hit(self, xy1: List[float], xy2: List[float]) -> bool:
         """
         Detecte si la valeur passé en paramètre rentre en collision avec l'objet
         """
@@ -82,17 +84,19 @@ class Obstacle:
                 return True
         return False
 
-    def defilement(self):
-        self.p1[0] -= SPEED
-        self.p2[0] -= SPEED
+    def defilement(self, speed: float):
+        self.p1[0] -= speed
+        self.p2[0] -= speed
         pass
+
 
 class Level:
 
-    def __init__(self, *obstacles: Obstacle):
+    def __init__(self, speed: float, *obstacles: Obstacle):
+        self.speed = speed
+        print(self.speed)
         self.obstacles = list(sorted(obstacles, key=lambda ob: ob.p1))
         self.current = 0
-        pass
 
     def defilement_obstacle(self):
         """
@@ -106,20 +110,36 @@ class Level:
                 self.current = i
             else:
                 screen.blit(FILL, (x, y))
-                obstacle.defilement()
+                obstacle.defilement(self.speed)
                 x, y = obstacle.p1
                 screen.blit(obstacle.IMAGE, (x, y))
-        pass
 
-#Création d'une liste d'obstacle
+    def defilement_sol(self):
+        """
+        La fonction décale le sol à chaque appel, cela permet de donner l'impression que le sol recule, donc
+        que le joueur avance
+        """
+        global SOL1_pos, SOL2_pos, SPEED, DISTANCE
+        DISTANCE += 1
+        if SOL1_pos <= -LARGEUR:
+            SOL1_pos = LARGEUR
+        if SOL2_pos <= -LARGEUR:
+            SOL2_pos = LARGEUR
+        SOL1_pos -= SPEED
+        SOL2_pos -= SPEED
+        screen.blit(SOL, (SOL1_pos, HAUTEUR_SOL))
+        screen.blit(SOL, (SOL2_pos, HAUTEUR_SOL))
+
+# Création d'une liste d'obstacle
+
 
 liste_obstacle = []
-liste_obstacle.append( Obstacle( PIQUE , [1000, 250], [1050, 300], "p" ) )
-liste_obstacle.append( Obstacle( PIQUE_REVERSE , [1000, 100], [1050, 150], "p" ) )
-liste_obstacle.append( Obstacle( BLOC , [1000, 50], [1050, 100], "b" ) )
-liste_obstacle.append( Obstacle( BLOC , [1450, 250], [1500, 300], "b" ) )
-liste_obstacle.append( Obstacle( BLOC , [1500, 250], [1550, 300], "b" ) )
-liste_obstacle.append( Obstacle( BLOC , [1550, 250], [1600, 300], "b" ) )
+liste_obstacle.append(Obstacle(PIQUE, [1000, 250], [1050, 300], "p"))
+liste_obstacle.append(Obstacle(PIQUE_REVERSE, [1000, 100], [1050, 150], "p"))
+liste_obstacle.append(Obstacle(BLOC, [1000, 50], [1050, 100], "b"))
+liste_obstacle.append(Obstacle(BLOC, [1450, 250], [1500, 300], "b"))
+liste_obstacle.append(Obstacle(BLOC, [1500, 250], [1550, 300], "b"))
+liste_obstacle.append(Obstacle(BLOC, [1550, 250], [1600, 300], "b"))
 """
 liste_obstacle.append( Obstacle( BLOC , [1000, 0], [1050, 50], "b" ) )
 liste_obstacle.append( Obstacle( PIQUE ,[1280, 250], [1330, 300], "p" ) )
@@ -132,38 +152,15 @@ liste_obstacle.append( Obstacle( PIQUE , [1650, 250], [1700, 300], "p" ) )
 liste_obstacle.append( Obstacle( BLOC , [1750, 250], [1800, 300], "b" ) )
 liste_obstacle.append( Obstacle( BLOC , [2050, 250], [2100, 300], "b" ) )
 """
-LVL1 = Level(*liste_obstacle)
+LVL1 = Level(SPEED, *liste_obstacle)
 
-def defilement_sol():
-    """
-    La fonction décale le sol à chaque appel, cela permet de donner l'impression que le sol recule, donc
-    que le joueur avance
-    """
-    global SOL1_pos, SOL2_pos, SPEED, DISTANCE
-    DISTANCE+=1
-    if SOL1_pos <= -LARGEUR:
-        SOL1_pos = LARGEUR
-    if SOL2_pos <= -LARGEUR:
-        SOL2_pos = LARGEUR
-    SOL1_pos-=SPEED
-    SOL2_pos-=SPEED
-    screen.blit(SOL, (SOL1_pos, HAUTEUR_SOL))
-    screen.blit(SOL, (SOL2_pos, HAUTEUR_SOL))
-    pass
-
-def show_distance():
-    """
-    Fonction qui permet d'afficher la distance du joueur en haut à gauche de la fenêtre
-    """
-    toshow = font.render(str(DISTANCE//2000), True, white, purple)
-    screen.blit(toshow, (LABEL_X, LABEL_Y))
-    pass
 
 def main():
     """
     Fonction principale qui tourne tant que le jeu n'est pas fini
     """
-    Bob = Joueur(LARGEUR//2-25, HAUTEUR_SOL - BOB_HAUTEUR, HAUTEUR_SOL-BOB_HAUTEUR) #Création du joueur (Bob)
+    Bob = Joueur(LARGEUR//2-25, HAUTEUR_SOL - BOB_HAUTEUR,
+                 HAUTEUR_SOL-BOB_HAUTEUR)  # Création du joueur (Bob)
     Bob_position = (Bob.BOB_X, BOB_Y)
     running = True
     SAUT = False
@@ -177,42 +174,37 @@ def main():
         screen.blit(FILL, Bob_position)
         Bob_position = (Bob.BOB_X, BOB_Y)
 
-
-        #GRAVITE
+        # GRAVITE
         if not SAUT:
             Bob.gravite()
             Bob_position = (Bob.BOB_X, Bob.BOB_Y)
             screen.blit(BOB, Bob_position)
 
-        #DEFILEMENT
+        # DEFILEMENT
         LVL1.defilement_obstacle()
-        defilement_sol()
-        #VERIFICATION HITBOX
+        LVL1.defilement_sol()
+        # VERIFICATION HITBOX
         running = not Bob.isDead(liste_obstacle)
 
-        #SAUT
+        # SAUT
         if SAUT:
             SAUT, frame = Bob.saut(frame)
             pygame.event.clear()
 
-        #Lecture des events
+        # Lecture des events
         if BOB_Y != Bob.surface:
             pygame.event.clear()
         else:
             for event in pygame.event.get():
-                if event.type == pygame.QUIT: # type: ignore
+                if event.type == pygame.QUIT:  # type: ignore
                     running = False
-                elif event.type == pygame.KEYDOWN: # type: ignore
-                    SAUT, frame, V, isGravite = True, 0, 0, True
+                elif event.type == pygame.KEYDOWN:  # type: ignore
+                    SAUT, frame, V = True, 0, 0
 
-        #Affichage de la distance parcouru
-        show_distance()
+        # Affichage de la distance parcouru
         pygame.display.flip()
-        clock.tick(160)
-    pygame.quit() # type: ignore
+        clock.tick(60)
+    pygame.quit()  # type: ignore
+
 
 main()
-
-
-
-
