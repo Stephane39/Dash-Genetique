@@ -1,5 +1,6 @@
 import pygame
 
+pygame.font.init()
 BOB = pygame.image.load('ressources/bob.png')
 FOND = pygame.image.load('ressources/fond.png')
 SOL = pygame.image.load('ressources/sol.png')
