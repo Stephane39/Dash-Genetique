@@ -1,24 +1,9 @@
 import pygame
-
-
+from typing import Tuple
+from ressources import *
 #Configuration de pygame
 pygame.init()
-BOB = pygame.image.load('ressources/bob.png')
-FOND = pygame.image.load('ressources/fond.png')
-SOL = pygame.image.load('ressources/sol.png')
-FILL = pygame.image.load('ressources/fill.png')
-PIQUE = pygame.image.load('ressources/pique.png')
-BLOC = pygame.image.load('ressources/bloc.png')
-PIQUE_REVERSE = pygame.transform.rotate(PIQUE, 180)
-LARGEUR, HAUTEUR = FOND.get_size()
-HAUTEUR_SOL = HAUTEUR-(SOL.get_size()[1])
-BOB_LARGEUR, BOB_HAUTEUR = BOB.get_size()
-BOB_X, BOB_Y = LARGEUR//2-25, HAUTEUR_SOL - BOB_HAUTEUR
-white = (255, 255, 255)
-purple = (162, 72, 164)
-font = pygame.font.Font('freesansbold.ttf', 32)
-LABEL_X = 15
-LABEL_Y = 15
+
 screen = pygame.display.set_mode((LARGEUR, HAUTEUR))
 
 #Configuration des variables pour le défilement du sol
@@ -40,13 +25,13 @@ class Obstacle:
         b = bloc
         bs = bloc surface
     """
-    def __init__(self, IMAGE, p1:tuple, p2:tuple, type:str):
+    def __init__(self, IMAGE, p1:Tuple[int, int], p2:Tuple[int, int], type:str):
         self.IMAGE = IMAGE
         self.p1 = p1
         self.p2 = p2
         self.type = type
-        pass
-    def is_hit(self, xy1:tuple, xy2:tuple)->bool:
+
+    def is_hit(self, xy1:Tuple[int, int], xy2:Tuple[int, int])->bool:
         """
         Detecte si la valeur passé en paramètre rentre en collision avec l'objet
         """
@@ -54,6 +39,7 @@ class Obstacle:
             if (self.p2[1] > xy1[1] >= self.p1[1]) or (self.p2[1] >= xy2[1] >= self.p1[1]):
                 return True
         return False
+    
     def defilement(self):
         self.p1 = (self.p1[0]-SPEED, self.p1[1])
         self.p2 = (self.p2[0]-SPEED, self.p2[1])
@@ -102,8 +88,8 @@ def defilement_sol():
 
 def defilement_obstacle(liste_obstacle:list):
     """
-    Cette fonction permet de faire défiler les obstalce, si les obstacle sont déjà passé
-    alors on les retirent de la liste liste_obstacle pour éviter de faire des calcules inutiles
+    Cette fonction permet de faire défiler les obstacles, si les obstacles sont déjà passé
+    alors on les retire de la liste liste_obstacle pour éviter de faire des calculs inutiles
     """
     for obstacle in liste_obstacle:
         x, y = obstacle.p1
@@ -118,7 +104,8 @@ def defilement_obstacle(liste_obstacle:list):
 
 def saut(frame:int)->bool:
     """
-    saut() permet de faire sauter BOB en l'affichant un peu plus haut à chaque appel, La fonction renvoie False quand l'animation est fini.
+    saut() permet de faire sauter BOB en l'affichant un peu plus haut à chaque appel.
+    La fonction renvoie False quand l'animation est fini.
     """
     global BOB_Y
     if frame < HAUTEUR_SAUT:
@@ -139,7 +126,7 @@ def gravite(surface):
 
 def isDead(BOB_p1:tuple, BOB_p2:tuple, liste_obstacle:list)->bool:
     """
-    Fonction qui regarde si les coordonnées actuelle de BOB rentrenet en collisions avec
+    Fonction qui regarde si les coordonnées actuelle de BOB rentrent en collisions avec
     un obstacle éventuel
     """
     for obstacle in liste_obstacle:
@@ -157,7 +144,7 @@ def show_distance():
 
 def main():
     """
-    Fonction principal qui tourne tant que le jeu n'est pas finit
+    Fonction principale qui tourne tant que le jeu n'est pas fini
     """
     global BOB_Y, V, SPEED
     running = True
@@ -209,6 +196,7 @@ def main():
 
         pygame.display.update()
     pygame.quit()
+    
 main()
 
 
