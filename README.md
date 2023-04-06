@@ -5,7 +5,7 @@ Ce projet vise à entrainer entraîner une IA grâce à un algorithme génétiqu
 
 ## Auteurs
 
-Listez le(s) auteur(s) du projet ici !
+Retrouvez les auteurs du projet ici !
 
-- **Real Quiet Kid** _alias_ [CarryUrself](https://github.com/CarryUrself)
+- **Real Quiet Kid** _alias_ [@CarryUrself](https://github.com/CarryUrself)
 - **jay** _alias_ [@jay7u3](https://github.com/jay7u3)
