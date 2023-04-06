@@ -14,14 +14,16 @@ DISTANCE = 0
 
 
 class Joueur:
-    def __init__(self,  BOB_X, BOB_Y, surface, G=0.05, V=0, HAUTEUR_SAUT=35, VITESSE=2.5):
+    def __init__(self, BOB_X, BOB_Y, surface):
         self.BOB_X = BOB_X
         self.BOB_Y = BOB_Y
-        self.G = G
-        self.V = V
-        self.HAUTEUR_SAUT = HAUTEUR_SAUT
         self.surface = surface
-        self.VITESSE = VITESSE
+        self.image = BOB
+        self.LARGEUR, self.HAUTEUR = self.image.get_size()
+        self.G = 0.05
+        self.V = 0
+        self.HAUTEUR_SAUT = 35
+        self.VITESSE = 2.5
         pass
 
     def saut(self, frame: int) -> Tuple[bool, int]:
@@ -53,7 +55,7 @@ class Joueur:
         un obstacle éventuel
         """
         BOB_p1 = (self.BOB_X, self.BOB_Y)
-        BOB_p2 = (self.BOB_X + BOB_LARGEUR, self.BOB_Y + BOB_HAUTEUR)
+        BOB_p2 = (self.BOB_X + self.LARGEUR, self.BOB_Y + self.HAUTEUR)
         for obstacle in liste_obstacle:
             if obstacle.is_hit(BOB_p1, BOB_p2):
                 return True
@@ -165,14 +167,14 @@ def main():
     running = True
     SAUT = False
     screen.blit(FOND, (0, 0))
-    screen.blit(BOB, (BOB_X, BOB_Y))
+    screen.blit(BOB, (Bob.BOB_X, Bob.BOB_Y))
     frame = 0
     clock = pygame.time.Clock()
     pygame.display.flip()
     while running:
 
-        screen.blit(FILL, Bob_position)
-        Bob_position = (Bob.BOB_X, BOB_Y)
+        screen.blit(FOND, (0, 0))
+        Bob_position = (Bob.BOB_X, Bob.BOB_Y)
 
         # GRAVITE
         if not SAUT:
@@ -192,18 +194,18 @@ def main():
             pygame.event.clear()
 
         # Lecture des events
-        if BOB_Y != Bob.surface:
+        if Bob.BOB_Y != Bob.surface:
             pygame.event.clear()
         else:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:  # type: ignore
                     running = False
                 elif event.type == pygame.KEYDOWN:  # type: ignore
-                    SAUT, frame, V = True, 0, 0
+                    SAUT, frame, Bob.V = True, 0, 0
 
         # Affichage de la distance parcouru
         pygame.display.flip()
-        clock.tick(60)
+        clock.tick(160)
     pygame.quit()  # type: ignore
 
 
