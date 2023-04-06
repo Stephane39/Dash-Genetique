@@ -1,7 +1,7 @@
 import pygame
 from typing import Tuple, List
 from ressources import *
-
+#
 #Configuration de pygame
 pygame.init() # type: ignore
 screen = pygame.display.set_mode((LARGEUR, HAUTEUR))
