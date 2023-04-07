@@ -1,6 +1,5 @@
 from pygame import Surface
 from typing import List, Tuple, Callable
-from typing_extensions import Self
 from ressources import *
 
 
@@ -217,7 +216,7 @@ class Level:
         pygame.quit()  # type: ignore
 
     @classmethod
-    def level_1(cls, screen: Surface) -> Self:
+    def level_1(cls, screen: Surface):
         """
         Fonction de création des obstacles du niveau.
         """
