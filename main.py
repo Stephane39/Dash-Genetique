@@ -65,8 +65,8 @@ class Joueur:
         """
         changed = False
         for obstacle in liste_obstacle:
-            if (obstacle.type == "bs"):
-                if (obstacle.p1[0] < self.BOB_X < obstacle.p2[0]) or (obstacle.p1[0] < self.BOB_X + self.LARGEUR < obstacle.p2[0]):
+            if (obstacle.type == "bs") and (self.BOB_Y + self.HAUTEUR <= obstacle.p1[1]):
+                if (obstacle.p1[0] <= self.BOB_X <= obstacle.p2[0]) or (obstacle.p1[0] <= self.BOB_X + self.LARGEUR <= obstacle.p2[0]):
                     self.surface_actu = min(self.surface_actu, obstacle.p1[1]-self.HAUTEUR)
                     changed = True
         if not changed:
@@ -78,11 +78,17 @@ class Joueur:
 liste_obstacle = []
 liste_obstacle.append(Obstacle(PIQUE, [1000, 250], [1050, 300], "p"))
 liste_obstacle.append(Obstacle(PIQUE_REVERSE, [1000, 100], [1050, 150], "p"))
-liste_obstacle.append(Obstacle(BLOC, [1000, 50], [1050, 100], "b")) 
-liste_obstacle.append(Obstacle(BLOC, [1450, 250], [1500, 300], "bs"))
-liste_obstacle.append(Obstacle(BLOC, [1500, 250], [1550, 300], "bs"))
-liste_obstacle.append(Obstacle(BLOC, [1550, 250], [1600, 300], "bs"))
-liste_obstacle.append(Obstacle(BLOC, [1750, 200], [1800, 250], "bs"))
+liste_obstacle.append(Obstacle(BLOC, [1000, 50], [1050, 100], "b"))
+liste_obstacle.append(Obstacle(BLOC, [1000, 0], [1050, 50], "b"))
+liste_obstacle.append(Obstacle(BLOC, [1050, 250], [1100, 300], "bs"))
+liste_obstacle.append(Obstacle(PIQUE, [1100, 250], [1150, 300], "p"))
+
+liste_obstacle.append(Obstacle(BLOC, [1320, 200], [1370, 250], "bs"))
+liste_obstacle.append(Obstacle(BLOC, [1500, 200], [1550, 250], "bs"))
+liste_obstacle.append(Obstacle(BLOC, [1550, 200], [1600, 250], "bs"))
+liste_obstacle.append(Obstacle(PIQUE_REVERSE, [1600, 100], [1650, 150], "p")) 
+liste_obstacle.append(Obstacle(BLOC, [1600, 50], [1650, 100], "b"))
+liste_obstacle.append(Obstacle(BLOC, [1600, 0], [1650, 50], "b"))
 """
 liste_obstacle.append( Obstacle( BLOC , [1000, 0], [1050, 50], "b" ) )
 liste_obstacle.append( Obstacle( PIQUE ,[1280, 250], [1330, 300], "p" ) )
@@ -143,8 +149,8 @@ def main():
                 SAUT, frame, Bob.V = True, 0, 0
 
         # Affichage de la distance parcouru
-        pygame.display.flip()
-        clock.tick(160)
+        pygame.display.update()
+        clock.tick(60)
     pygame.quit()  # type: ignore
 
 

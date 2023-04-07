@@ -21,8 +21,8 @@ class Obstacle:
         """
         Detecte si la valeur passé en paramètre rentre en collision avec l'objet
         """
-        if self.type != "bs" and ((self.p2[0] >= xy1[0] >= self.p1[0]) or (self.p2[0] >= xy2[0] >= self.p1[0])):
-            if (self.p2[1] > xy1[1] >= self.p1[1]) or (self.p2[1] >= xy2[1] >= self.p1[1]):
+        if (self.p2[0] >= xy1[0] >= self.p1[0]) or (self.p2[0] >= xy2[0] >= self.p1[0]):
+            if (self.p2[1] > xy1[1] > self.p1[1]) or (self.p2[1] >= xy2[1] > self.p1[1]):
                 return True
         return False
 
