@@ -1,16 +1,11 @@
 import pygame
 from typing import Tuple, List
 from ressources import *
+from environnement import *
 
 # Configuration de pygame
 pygame.init()  # type: ignore
 screen = pygame.display.set_mode((LARGEUR, HAUTEUR))
-
-# Configuration des variables pour le défilement du sol
-SOL1_pos = 0
-SOL2_pos = LARGEUR
-SPEED = 2.5
-DISTANCE = 0
 
 
 class Joueur:
@@ -61,77 +56,6 @@ class Joueur:
                 return True
         return False
 
-
-class Obstacle:
-    """
-    pour les types:
-        p = pique
-        b = bloc
-        bs = bloc surface
-    """
-
-    def __init__(self, IMAGE, p1: List[float], p2: List[float], type: str):
-        self.IMAGE = IMAGE
-        self.p1 = p1
-        self.p2 = p2
-        self.type = type
-        pass
-
-    def is_hit(self, xy1: List[float], xy2: List[float]) -> bool:
-        """
-        Detecte si la valeur passé en paramètre rentre en collision avec l'objet
-        """
-        if ((self.p2[0] >= xy1[0] >= self.p1[0]) or (self.p2[0] >= xy2[0] >= self.p1[0])):
-            if (self.p2[1] > xy1[1] >= self.p1[1]) or (self.p2[1] >= xy2[1] >= self.p1[1]):
-                return True
-        return False
-
-    def defilement(self, speed: float):
-        self.p1[0] -= speed
-        self.p2[0] -= speed
-        pass
-
-
-class Level:
-
-    def __init__(self, speed: float, *obstacles: Obstacle):
-        self.speed = speed
-        print(self.speed)
-        self.obstacles = list(sorted(obstacles, key=lambda ob: ob.p1))
-        self.current = 0
-
-    def defilement_obstacle(self):
-        """
-        Cette fonction permet de faire défiler les obstacles, si les obstacles sont déjà passé
-        alors on les retire de la liste liste_obstacle pour éviter de faire des calculs inutiles
-        """
-        for i in range(self.current, len(self.obstacles)):
-            obstacle = self.obstacles[i]
-            x, y = obstacle.p1
-            if obstacle.p2[0] < 0:
-                self.current = i
-            else:
-                screen.blit(FILL, (x, y))
-                obstacle.defilement(self.speed)
-                x, y = obstacle.p1
-                screen.blit(obstacle.IMAGE, (x, y))
-
-    def defilement_sol(self):
-        """
-        La fonction décale le sol à chaque appel, cela permet de donner l'impression que le sol recule, donc
-        que le joueur avance
-        """
-        global SOL1_pos, SOL2_pos, SPEED, DISTANCE
-        DISTANCE += 1
-        if SOL1_pos <= -LARGEUR:
-            SOL1_pos = LARGEUR
-        if SOL2_pos <= -LARGEUR:
-            SOL2_pos = LARGEUR
-        SOL1_pos -= SPEED
-        SOL2_pos -= SPEED
-        screen.blit(SOL, (SOL1_pos, HAUTEUR_SOL))
-        screen.blit(SOL, (SOL2_pos, HAUTEUR_SOL))
-
 # Création d'une liste d'obstacle
 
 
@@ -154,7 +78,7 @@ liste_obstacle.append( Obstacle( PIQUE , [1650, 250], [1700, 300], "p" ) )
 liste_obstacle.append( Obstacle( BLOC , [1750, 250], [1800, 300], "b" ) )
 liste_obstacle.append( Obstacle( BLOC , [2050, 250], [2100, 300], "b" ) )
 """
-LVL1 = Level(SPEED, *liste_obstacle)
+LVL1 = Level(screen, *liste_obstacle)
 
 
 def main():
@@ -163,7 +87,7 @@ def main():
     """
     Bob = Joueur(LARGEUR//2-25, HAUTEUR_SOL - BOB_HAUTEUR,
                  HAUTEUR_SOL-BOB_HAUTEUR)  # Création du joueur (Bob)
-    Bob_position = (Bob.BOB_X, BOB_Y)
+    Bob_position = (Bob.BOB_X, Bob.BOB_Y)
     running = True
     SAUT = False
     screen.blit(FOND, (0, 0))
