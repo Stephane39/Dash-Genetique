@@ -13,6 +13,7 @@ class Joueur:
         self.BOB_X = BOB_X
         self.BOB_Y = BOB_Y
         self.surface = surface
+        self.surface_actu = surface
         self.image = BOB
         self.LARGEUR, self.HAUTEUR = self.image.get_size()
         self.G = 0.05
@@ -39,15 +40,16 @@ class Joueur:
         """
         gravite() permet d'appliquer une effet de gravité au joueur si il se situe dans les airs
         """
-        if self.BOB_Y < self.surface:
+        if self.BOB_Y < self.surface_actu:
             self.V += self.G
-            self.BOB_Y += min(self.V, self.surface-self.BOB_Y)
+            self.BOB_Y += min(self.V, self.surface_actu-self.BOB_Y)
+            pygame.event.clear()
         pass
 
     def isDead(self, liste_obstacle: list) -> bool:
         """
         isDead() regarde si les coordonnées actuelle de BOB rentrent en collisions avec
-        un obstacle éventuel
+        un obstacle éventuel.
         """
         BOB_p1 = (self.BOB_X, self.BOB_Y)
         BOB_p2 = (self.BOB_X + self.LARGEUR, self.BOB_Y + self.HAUTEUR)
@@ -55,17 +57,32 @@ class Joueur:
             if obstacle.is_hit(BOB_p1, BOB_p2):
                 return True
         return False
+    
+    def actualiser_surface(self, liste_obstacles:list):
+        """
+        actualiser_surface() permet de gerer la hauteur de la surface afin de pouvoir sauter sur des
+        éléments par exemple.
+        """
+        changed = False
+        for obstacle in liste_obstacle:
+            if (obstacle.type == "bs"):
+                if (obstacle.p1[0] < self.BOB_X < obstacle.p2[0]) or (obstacle.p1[0] < self.BOB_X + self.LARGEUR < obstacle.p2[0]):
+                    self.surface_actu = min(self.surface_actu, obstacle.p1[1]-self.HAUTEUR)
+                    changed = True
+        if not changed:
+            self.surface_actu = self.surface
+        pass
 
 # Création d'une liste d'obstacle
-
 
 liste_obstacle = []
 liste_obstacle.append(Obstacle(PIQUE, [1000, 250], [1050, 300], "p"))
 liste_obstacle.append(Obstacle(PIQUE_REVERSE, [1000, 100], [1050, 150], "p"))
-liste_obstacle.append(Obstacle(BLOC, [1000, 50], [1050, 100], "b"))
-liste_obstacle.append(Obstacle(BLOC, [1450, 250], [1500, 300], "b"))
-liste_obstacle.append(Obstacle(BLOC, [1500, 250], [1550, 300], "b"))
-liste_obstacle.append(Obstacle(BLOC, [1550, 250], [1600, 300], "b"))
+liste_obstacle.append(Obstacle(BLOC, [1000, 50], [1050, 100], "b")) 
+liste_obstacle.append(Obstacle(BLOC, [1450, 250], [1500, 300], "bs"))
+liste_obstacle.append(Obstacle(BLOC, [1500, 250], [1550, 300], "bs"))
+liste_obstacle.append(Obstacle(BLOC, [1550, 250], [1600, 300], "bs"))
+liste_obstacle.append(Obstacle(BLOC, [1750, 200], [1800, 250], "bs"))
 """
 liste_obstacle.append( Obstacle( BLOC , [1000, 0], [1050, 50], "b" ) )
 liste_obstacle.append( Obstacle( PIQUE ,[1280, 250], [1330, 300], "p" ) )
@@ -116,16 +133,14 @@ def main():
         if SAUT:
             SAUT, frame = Bob.saut(frame)
             pygame.event.clear()
+        Bob.actualiser_surface(liste_obstacle)
 
         # Lecture des events
-        if Bob.BOB_Y != Bob.surface:
-            pygame.event.clear()
-        else:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:  # type: ignore
-                    running = False
-                elif event.type == pygame.KEYDOWN:  # type: ignore
-                    SAUT, frame, Bob.V = True, 0, 0
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:  # type: ignore
+                running = False
+            elif event.type == pygame.KEYDOWN:  # type: ignore
+                SAUT, frame, Bob.V = True, 0, 0
 
         # Affichage de la distance parcouru
         pygame.display.flip()
