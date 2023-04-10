@@ -79,7 +79,7 @@ class DetecteurObstacle(Neurone):
         Créer un nouveau neurone detecteur d'obstacle random
         """
         coos: List[float] = [
-            randint(LARGEUR//2, LARGEUR), randint(250, HAUTEUR_SOL)]
+            randint(LARGEUR//2, LARGEUR), randint(0, HAUTEUR_SOL)]
         bloc_type = choice(cls.types_obstacles)
         return DetecteurObstacle(coos, bloc_type)
 
@@ -101,8 +101,10 @@ class IA:
     def __init__(self):
         self.reseau: Neurone = DetecteurObstacle.nouveau()
         self.joueur = Joueur.nouveau()
+        self.score = 0
 
-    def muter(self, neurone: Neurone):
+    @classmethod
+    def muter(cls, neurone: Neurone):
         """
         DetecteurObstacle:
             peut changer les coordonnées (1 chance sur 2)
@@ -150,7 +152,11 @@ class IA:
                 # Mutation des enfants
                 for enfant in neurone.enfants:
                     if randint(0, 1):
-                        self.muter(enfant)
+                        cls.muter(enfant)
+
+    def reset(self):
+        self.joueur = Joueur.nouveau()
+        self.score = 0
 
     def __bool__(self):
         return bool(self.joueur)

@@ -1,5 +1,5 @@
 from pygame import Surface
-from typing import List, Tuple, Callable
+from typing import List, Tuple
 from ressources import *
 
 
@@ -40,7 +40,7 @@ class Obstacle:
 
 class Joueur:
 
-    def __init__(self, BOB_X: float, BOB_Y: float, surface):
+    def __init__(self, BOB_X: float, BOB_Y: float, surface: float):
         self.BOB_X = BOB_X
         self.BOB_Y = BOB_Y
         self.surface = surface

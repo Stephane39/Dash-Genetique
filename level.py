@@ -75,24 +75,23 @@ class Level:
         Fonction principale qui tourne tant que le jeu n'est pas fini
         """
         clock = pygame.time.Clock()
-        pygame.display.flip()
-
+        i = 0
         # loop
-        while any(joueurs):
-            print(list(map(bool, joueurs)))
+        while any(joueurs) and self.obstacles[-1].p2[0] > 0:
             self.screen.blit(FOND, (0, 0))
             for ia in joueurs:
                 bob = ia.joueur
                 if not bob:
                     continue
                 # AFFICHAGE
-                print("update")
                 self.screen.blit(bob.image, (bob.BOB_X, bob.BOB_Y))
                 # GRAVITE
                 if not bob.est_en_train_de_sauter:
                     bob.gravite()
                 # VERIFICATION HITBOX
-                bob.alive = not self.is_bob_dead(bob)
+                if self.is_bob_dead(bob):
+                    ia.score = i
+                    bob.alive = False
                 # SAUT
                 if bob.est_en_train_de_sauter:
                     bob.est_en_train_de_sauter, bob.frame = bob.saut(
@@ -107,8 +106,8 @@ class Level:
             self.defilement_obstacle()
             self.defilement_sol()
             pygame.display.update()
-            clock.tick(160)
-        pygame.quit()  # type: ignore
+            clock.tick(60)
+            i += 1
 
     @classmethod
     def level_1(cls, screen: Surface):
