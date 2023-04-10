@@ -9,10 +9,18 @@ from environnement import *
 class Neurone:
 
     @abstractmethod
-    def evaluer(self) -> bool:
+    def evaluer(self, obstacles: List[Obstacle]) -> bool:
         """
         Cette méthode permet de vérifier si le neurone est activé.
         """
+        pass
+
+    @abstractmethod
+    def __str__(self):
+        pass
+
+    @abstractmethod
+    def __repr__(self):
         pass
 
 
@@ -23,11 +31,11 @@ class PorteLogique(Neurone):
         self.enfants = enfants
         self.negatif = negatif
 
-    def evaluer(self) -> bool:
+    def evaluer(self, obstacles: List[Obstacle]) -> bool:
         ou = False
         et = True
         for e in self.enfants:
-            b = e.evaluer()
+            b = e.evaluer(obstacles)
             et = et and b
             ou = ou or b
         if self.negatif:
@@ -37,6 +45,12 @@ class PorteLogique(Neurone):
             return et
         else:
             return ou
+
+    def __str__(self):
+        return f"PL({'et' if self.operateur else 'ou'},{'non' if self.negatif else 'oui'},{str(self.enfants)})"
+
+    def __repr__(self):
+        return str(self)
 
 
 class DetecteurObstacle(Neurone):
@@ -76,6 +90,9 @@ class DetecteurObstacle(Neurone):
         operateur = bool(randint(0, 1))
         negatif = bool(randint(0, 1))
         self = PorteLogique(operateur, negatif, [e])
+
+    def __str__(self):
+        return f"DO({self.bloc_type}, {self.coordonees})"
 
 
 class IA:
@@ -132,4 +149,3 @@ class IA:
                 for enfant in neurone.enfants:
                     if randint(0, 1):
                         self.muter(enfant)
-

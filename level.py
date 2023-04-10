@@ -1,6 +1,6 @@
-from ressources import*
-from environnement import*
-from neuronal_network import*
+from ressources import *
+from environnement import *
+from neuronal_network import *
 
 
 class Level:
@@ -83,20 +83,20 @@ class Level:
         clock = pygame.time.Clock()
         pygame.display.flip()
 
-        #IA
+        # IA
         p1 = IA().reseau
-        print(p1.coordonees, p1.bloc_type)
+        if isinstance(p1, DetecteurObstacle):
+            print(p1.coordonees, p1.bloc_type)
 
         # loop
         while running:
             self.screen.blit(FOND, (0, 0))
             Bob_position = (self.bob.BOB_X, self.bob.BOB_Y)
 
-            #IA
-            print(p1.coordonees, p1.bloc_type, " ", self.obstacles[0].p1[0])
-            if p1.evaluer(self.obstacles):
+            # IA
+            print(p1, self.obstacles[0].p1[0])
+            if p1.evaluer(list(self.get_obstacles())):
                 self.bob.est_en_train_de_sauter, frame, self.bob.V = True, 0, 0
-
 
             # GRAVITE
             if not self.bob.est_en_train_de_sauter:
@@ -161,9 +161,11 @@ class Level:
         liste_obstacle.append(Obstacle(PIQUE, [2200, 250], [2250, 300], "p"))
         liste_obstacle.append(Obstacle(PIQUE, [2250, 250], [2300, 300], "p"))
         liste_obstacle.append(Obstacle(BLOC, [2300, 250], [2350, 300], "bs"))
-        liste_obstacle.append(Obstacle(GIGACHAD, [2600, 50], [2650, 100], "bs"))
+        liste_obstacle.append(
+            Obstacle(GIGACHAD, [2600, 50], [2650, 100], "bs"))
         niveau = Level(screen, Joueur.nouveau(), *liste_obstacle)
         return niveau
+
     @classmethod
     def level_2(cls, screen: Surface):
         """
