@@ -83,7 +83,7 @@ class DetecteurObstacle(Neurone):
         Créer un nouveau neurone detecteur d'obstacle random
         """
         coos: List[float] = [
-            randint(LARGEUR//2, LARGEUR), randint(0, HAUTEUR_SOL)]
+            randint(LARGEUR//2, LARGEUR), randint(250, HAUTEUR_SOL)]
         bloc_type = choice(cls.types_obstacles)
         return DetecteurObstacle(coos, bloc_type)
 
