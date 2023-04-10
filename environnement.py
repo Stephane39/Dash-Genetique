@@ -1,7 +1,7 @@
 from pygame import Surface
 from typing import List, Tuple
 from ressources import *
-
+from random import choice
 
 class Obstacle:
     """
@@ -45,7 +45,7 @@ class Joueur:
         self.BOB_Y = BOB_Y
         self.surface = surface
         self.surface_actu = surface
-        self.image = BOB
+        self.image = choice(BOB_PICS)
         self.LARGEUR, self.HAUTEUR = self.image.get_size()
         self.G = 0.05
         self.V = 0
@@ -69,7 +69,7 @@ class Joueur:
             frame += 1
             screen.blit(FILL, (self.BOB_X, self.BOB_Y))
             self.BOB_Y -= self.VITESSE
-            screen.blit(BOB, (self.BOB_X, self.BOB_Y))
+            screen.blit(self.image, (self.BOB_X, self.BOB_Y))
             return True, frame
         else:
             return False, -1
