@@ -60,10 +60,10 @@ class PorteLogique(Neurone):
         return PorteLogique(bool(randint(0, 1)), bool(randint(0, 1)), [])
 
     def __str__(self):
-        return f"PL({'et' * self.operateur + 'ou' * (1-self.operateur)}, {''.join(map(str, self.enfants))})"
+        return f"PL({'et' if self.operateur else 'ou'}, {'non' if self.negatif else 'oui'}, {'|'.join(map(str, self.enfants))})"
 
     def __repr__(self):
-        return f"PL({'et' if self.operateur else 'ou'},{'non' if self.negatif else 'oui'},{str(self.enfants)})"
+        return self.__str__()
 
 
 class DetecteurObstacle(Neurone):
@@ -172,12 +172,10 @@ class IA:
                     neurone.enfants.append(PorteLogique.nouveau())
                 else:
                     neurone.enfants.append(DetecteurObstacle.nouveau())
-
-            if randint(0, 1):
-                # Mutation des enfants
-                for enfant in neurone.enfants:
-                    if randint(0, 1):
-                        cls.muter(enfant)
+            # Mutation des enfants
+            for enfant in neurone.enfants:
+                if randint(0, 1):
+                    cls.muter(enfant)
         return neurone
 
     def reset(self):

@@ -33,18 +33,23 @@ class EntraineurIA:
         for _ in range(G):
             self.IAs.append(IA())
 
+    def save(self, path: str):
+        with open(path, "w") as file:
+            file.write(str(self.IAs[0].reseau))
+
     def commencer(self):
         for _ in range(100):
             screen: pygame.surface.Surface = pygame.display.set_mode(
                 (LARGEUR, HAUTEUR))
             l = self.get_level(screen)
-            l.start(self.IAs)
+            l.start(self.IAs, 0)
             self.IAs.sort(key=lambda ia: (
                 ia.joueur.alive, ia.score), reverse=True)
-            print(sum(map(lambda ia: ia.score, self.IAs)))
+            self.save("./saved.txt")
             self.muter_IAs()
 
         screen: pygame.surface.Surface = pygame.display.set_mode(
             (LARGEUR, HAUTEUR))
         l = self.get_level(screen)
         l.start(self.IAs, 160)
+        self.save("./saved.txt")
