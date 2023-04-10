@@ -94,14 +94,18 @@ class Level:
                     bob.alive = False
                 # SAUT
                 if bob.est_en_train_de_sauter:
-                    bob.est_en_train_de_sauter, bob.frame = bob.saut(
-                        bob.frame, self.screen)
+                    bob.est_en_train_de_sauter, bob.frame = bob.saut(bob.frame, self.screen)
+
                 bob.actualiser_surface(list(self.get_obstacles()))
                 # Lecture des events
-                if ia.reseau.evaluer(list(self.get_obstacles())):  # type: ignore
+                if (ia.reseau.evaluer(list(self.get_obstacles()))) and (not bob.est_en_train_de_sauter) and (bob.BOB_Y == bob.surface_actu):  # type: ignore
                     bob.est_en_train_de_sauter, bob.frame, bob.V = True, 0, 0
-                # Affichage de la distance parcouru
 
+            #Ferme le jeu si une touche est pressé.
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+            
             # DEFILEMENT
             self.defilement_obstacle()
             self.defilement_sol()

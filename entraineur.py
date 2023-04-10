@@ -15,21 +15,25 @@ class EntraineurIA:
         M = int(L*(10/100))
         D = int(L*(50/100))
         G = int(L*(40/100))
+
+        #sauvegarde de 10% des meilleurs IAs pour la génération suivant
         self.IAs = self.IAs[:M]
-        print(len(self.IAs))
-        print(1)
+
+        #reset des attributs des IAs
         for ia in self.IAs:
             ia.reset()
+        
+        #Ajout de 50% d'IAs qui sont des versions muté des 10% de meilleur
         for to_copy in list(self.IAs):
             for _ in range(D):
                 # print(2)
                 copied = copy(to_copy)
                 IA.muter(copied.reseau)
                 self.IAs.append(copied)
-        print(3)
+
+        #ajout de 40% de nouvelles IAs générer aléatoirement
         for _ in range(G):
             self.IAs.append(IA())
-        print(4)
 
     def commencer(self):
         for i in range(5):
