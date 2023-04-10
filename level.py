@@ -71,15 +71,25 @@ class Level:
         self.screen.blit(SOL, (self.sol2_pos, HAUTEUR_SOL))
         pass
 
-    def start(self, joueurs: List[IA], fps: int = 0):
+    def start(self, joueurs: List[IA], fps: int = 160, nbGeneration:int = 0, score:int = 0):
         """
         Fonction principale qui tourne tant que le jeu n'est pas fini
         """
         clock = pygame.time.Clock()
         i = 0
+
+        font = pygame.font.Font('freesansbold.ttf', 16)
+        Text_Generation = font.render('Generation: ' + str(nbGeneration) , True, (255, 255, 255), (163, 73, 164))
+
+        Text_Score = font.render('Score: ' + str(score) , True, (255, 255, 255), (163, 73, 164))
         # loop
         while any(joueurs) and self.obstacles[-1].p2[0] > 0:
             self.screen.blit(FOND, (0, 0))
+
+            #Affichage du nombre de généartion
+            self.screen.blit(Text_Generation, (0, 0))
+            #Affichage du score de la génération précedente
+            self.screen.blit(Text_Score, (0, Text_Generation.get_size()[1]))
             for ia in joueurs:
                 bob = ia.joueur
                 if not bob:

@@ -38,18 +38,22 @@ class EntraineurIA:
             file.write(str(self.IAs[0].reseau))
 
     def commencer(self):
+        screen: pygame.surface.Surface = pygame.display.set_mode((LARGEUR, HAUTEUR))
+        nbGeneration = 0
+        score = 0
         for _ in range(100):
-            screen: pygame.surface.Surface = pygame.display.set_mode(
-                (LARGEUR, HAUTEUR))
             l = self.get_level(screen)
-            l.start(self.IAs, 0)
+            l.start(self.IAs, 160, nbGeneration, score)
             self.IAs.sort(key=lambda ia: (
                 ia.joueur.alive, ia.score), reverse=True)
             self.save("./saved.txt")
+            score = sum(map(lambda ia: ia.score, self.IAs))//len(self.IAs)
+            nbGeneration+=1
             self.muter_IAs()
+
 
         screen: pygame.surface.Surface = pygame.display.set_mode(
             (LARGEUR, HAUTEUR))
         l = self.get_level(screen)
-        l.start(self.IAs, 160)
+        l.start(self.IAs, 160, nbGeneration, score)
         self.save("./saved.txt")
