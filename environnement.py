@@ -31,6 +31,12 @@ class Obstacle:
         self.p2[0] -= speed
         pass
 
+    def __str__(self):
+        return f"{self.type} {self.p1}, {self.p2}"
+
+    def __repr__(self):
+        return str(self)
+
 
 class Joueur:
 
@@ -46,7 +52,8 @@ class Joueur:
         self.HAUTEUR_SAUT = 35
         self.VITESSE = 2.5
         self.est_en_train_de_sauter = False
-        pass
+        self.frame = 0
+        self.alive = True
 
     @classmethod
     def nouveau(cls):
@@ -77,7 +84,7 @@ class Joueur:
             pygame.event.clear()
         pass
 
-    def actualiser_surface(self, liste_obstacle: list):
+    def actualiser_surface(self, liste_obstacle: List[Obstacle]):
         """
         actualiser_surface() permet de gerer la hauteur de la surface afin de pouvoir sauter sur des
         éléments par exemple.
@@ -93,3 +100,5 @@ class Joueur:
             self.surface_actu = self.surface
         pass
 
+    def __bool__(self):
+        return self.alive

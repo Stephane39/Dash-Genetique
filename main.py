@@ -1,7 +1,7 @@
 import pygame
-from ressources import*
+from ressources import *
 from level import *
-
+from entraineur import EntraineurIA
 # Configuration de pygame
 pygame.init()  # type: ignore
 screen = pygame.display.set_mode((LARGEUR, HAUTEUR))
@@ -16,7 +16,8 @@ def play():
     """
     # Création du niveau (LVL1)
     LVL1 = Level.level_2(screen)  # type: ignore
-    LVL1.start(play)
+    E = EntraineurIA(LVL1, 5)
+    E.commencer()
     pass
 
 

@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List
 from abc import abstractmethod
 from random import randint, choice
 from ressources import LARGEUR, HAUTEUR
@@ -59,7 +59,7 @@ class DetecteurObstacle(Neurone):
     """
     types_obstacles = ["bs", "p"]
 
-    def __init__(self, coordonees: List[int], bloc_type: str) -> None:
+    def __init__(self, coordonees: List[float], bloc_type: str) -> None:
         self.coordonees = coordonees
         self.bloc_type = bloc_type
 
@@ -78,7 +78,8 @@ class DetecteurObstacle(Neurone):
         """
         Créer un nouveau neurone detecteur d'obstacle random
         """
-        coos = [randint(LARGEUR//2, LARGEUR), randint(250, HAUTEUR_SOL)]
+        coos: List[float] = [
+            randint(LARGEUR//2, LARGEUR), randint(250, HAUTEUR_SOL)]
         bloc_type = choice(cls.types_obstacles)
         return DetecteurObstacle(coos, bloc_type)
 
@@ -99,6 +100,7 @@ class IA:
 
     def __init__(self):
         self.reseau: Neurone = DetecteurObstacle.nouveau()
+        self.joueur = Joueur.nouveau()
 
     def muter(self, neurone: Neurone):
         """
@@ -149,3 +151,6 @@ class IA:
                 for enfant in neurone.enfants:
                     if randint(0, 1):
                         self.muter(enfant)
+
+    def __bool__(self):
+        return bool(self.joueur)

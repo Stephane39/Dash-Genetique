@@ -5,9 +5,8 @@ from neuronal_network import *
 
 class Level:
 
-    def __init__(self, screen: Surface, bob: Joueur, *obstacles: Obstacle):
+    def __init__(self, screen: Surface, *obstacles: Obstacle):
         self.screen = screen
-        self.bob = bob
         self.largeur_ecran = self.screen.get_width()
         self.obstacles = list(sorted(obstacles, key=lambda ob: ob.p1[0]))
         self.current = 0
@@ -30,14 +29,14 @@ class Level:
             else:
                 yield obstacle
 
-    def is_bob_dead(self) -> bool:
+    def is_bob_dead(self, bob: Joueur) -> bool:
         """
         isDead() regarde si les coordonnées actuelle de BOB rentrent en collisions avec
         un obstacle éventuel.
         """
-        BOB_p1 = [self.bob.BOB_X, self.bob.BOB_Y]
-        BOB_p2 = [self.bob.BOB_X + self.bob.LARGEUR,
-                  self.bob.BOB_Y + self.bob.HAUTEUR]
+        BOB_p1 = [bob.BOB_X, bob.BOB_Y]
+        BOB_p2 = [bob.BOB_X + bob.LARGEUR,
+                  bob.BOB_Y + bob.HAUTEUR]
         for obstacle in self.get_obstacles(True):
             if obstacle.is_hit(BOB_p1, BOB_p2):
                 return True
@@ -71,64 +70,42 @@ class Level:
         self.screen.blit(SOL, (self.sol2_pos, HAUTEUR_SOL))
         pass
 
-    def start(self, restart: Callable[[], None]):
+    def start(self, joueurs: List[IA]):
         """
         Fonction principale qui tourne tant que le jeu n'est pas fini
         """
-        # init
-        running = True
-        self.screen.blit(FOND, (0, 0))
-        self.screen.blit(BOB, (self.bob.BOB_X, self.bob.BOB_Y))
-        frame = 0
         clock = pygame.time.Clock()
         pygame.display.flip()
 
-        # IA
-        p1 = IA().reseau
-        if isinstance(p1, DetecteurObstacle):
-            print(p1.coordonees, p1.bloc_type)
-
         # loop
-        while running:
+        while any(joueurs):
+            print(list(map(bool, joueurs)))
             self.screen.blit(FOND, (0, 0))
-            Bob_position = (self.bob.BOB_X, self.bob.BOB_Y)
-
-            # IA
-            print(p1, self.obstacles[0].p1[0])
-            if p1.evaluer(list(self.get_obstacles())):
-                self.bob.est_en_train_de_sauter, frame, self.bob.V = True, 0, 0
-
-            # GRAVITE
-            if not self.bob.est_en_train_de_sauter:
-                self.bob.gravite()
-                Bob_position = (self.bob.BOB_X, self.bob.BOB_Y)
-                self.screen.blit(BOB, Bob_position)
+            for ia in joueurs:
+                bob = ia.joueur
+                if not bob:
+                    continue
+                # AFFICHAGE
+                print("update")
+                self.screen.blit(bob.image, (bob.BOB_X, bob.BOB_Y))
+                # GRAVITE
+                if not bob.est_en_train_de_sauter:
+                    bob.gravite()
+                # VERIFICATION HITBOX
+                bob.alive = not self.is_bob_dead(bob)
+                # SAUT
+                if bob.est_en_train_de_sauter:
+                    bob.est_en_train_de_sauter, bob.frame = bob.saut(
+                        bob.frame, self.screen)
+                bob.actualiser_surface(list(self.get_obstacles()))
+                # Lecture des events
+                if ia.reseau.evaluer(list(self.get_obstacles())):  # type: ignore
+                    bob.est_en_train_de_sauter, bob.frame, bob.V = True, 0, 0
+                # Affichage de la distance parcouru
 
             # DEFILEMENT
             self.defilement_obstacle()
             self.defilement_sol()
-
-            # VERIFICATION HITBOX
-            running = not self.is_bob_dead()
-            if running is False:
-                restart()
-                break
-
-            # SAUT
-            if self.bob.est_en_train_de_sauter:
-                self.bob.est_en_train_de_sauter, frame = self.bob.saut(
-                    frame, self.screen)
-                pygame.event.clear()
-            self.bob.actualiser_surface(list(self.get_obstacles()))
-
-            # Lecture des events
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:  # type: ignore
-                    running = False
-                elif event.type == pygame.KEYDOWN:  # type: ignore
-                    self.bob.est_en_train_de_sauter, frame, self.bob.V = True, 0, 0
-
-            # Affichage de la distance parcouru
             pygame.display.update()
             clock.tick(160)
         pygame.quit()  # type: ignore
@@ -163,7 +140,7 @@ class Level:
         liste_obstacle.append(Obstacle(BLOC, [2300, 250], [2350, 300], "bs"))
         liste_obstacle.append(
             Obstacle(GIGACHAD, [2600, 50], [2650, 100], "bs"))
-        niveau = Level(screen, Joueur.nouveau(), *liste_obstacle)
+        niveau = Level(screen, *liste_obstacle)
         return niveau
 
     @classmethod
@@ -173,5 +150,5 @@ class Level:
         """
         liste_obstacle: List[Obstacle] = []
         liste_obstacle.append(Obstacle(BLOC, [1000, 250], [1050, 300], "bs"))
-        niveau = Level(screen, Joueur.nouveau(), *liste_obstacle)
+        niveau = Level(screen, *liste_obstacle)
         return niveau
