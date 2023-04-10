@@ -1,7 +1,6 @@
 from level import Level
 from neuronal_network import IA
 from typing import Callable
-from copy import copy
 from ressources import LARGEUR, HAUTEUR
 import pygame
 
@@ -15,27 +14,34 @@ class EntraineurIA:
     def muter_IAs(self):
         L = len(self.IAs)
         M = int(L*(10/100))
-        D = int(L*(50/100)/M)
-        G = int(L*(40/100))
-        print(M+D*M+G)
+        D = int(L*(70/100)/M)
+        G = int(L*(20/100))
+        # sauvegarde de 10% des meilleurs IAs pour la génération suivant
         self.IAs = self.IAs[:M]
-        print(len(self.IAs))
-        for ia in self.IAs:
+        # Ajout de 50% d'IAs qui sont des versions muté des 10% de meilleur
+        for ia in list(self.IAs):
+            # reset des attributs des IAs
             ia.reset()
-        for to_copy in list(self.IAs):
             for _ in range(D):
-                copied = copy(to_copy)
-                IA.muter(copied.reseau)
-                self.IAs.append(copied)
+                enfant = ia.copy()
+                IA.muter(enfant.reseau)
+                self.IAs.append(enfant)
+        # ajout de 40% de nouvelles IAs générer aléatoirement
         for _ in range(G):
             self.IAs.append(IA())
 
     def commencer(self):
-        for i in range(5):
+        for _ in range(10):
             screen: pygame.surface.Surface = pygame.display.set_mode(
                 (LARGEUR, HAUTEUR))
             l = self.get_level(screen)
             l.start(self.IAs)
-            self.IAs.sort(key=lambda ia: ia.score, reverse=True)
+            self.IAs.sort(key=lambda ia: (
+                ia.joueur.alive, ia.score), reverse=True)
+            print(sum(map(lambda ia: ia.score, self.IAs)))
             self.muter_IAs()
-            print(i)
+
+        screen: pygame.surface.Surface = pygame.display.set_mode(
+            (LARGEUR, HAUTEUR))
+        l = self.get_level(screen)
+        l.start(self.IAs, 160)

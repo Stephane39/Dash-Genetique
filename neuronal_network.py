@@ -2,14 +2,14 @@ from typing import List
 from abc import abstractmethod
 from random import randint, choice
 from ressources import LARGEUR, HAUTEUR
-from copy import deepcopy
+from copy import copy
 from environnement import *
 
 
 class Neurone:
 
     @abstractmethod
-    def evaluer(self, obstacles: List[Obstacle]) -> bool:
+    def evaluer(self, obstacles: List[Obstacle], coos_bob: List[float]) -> bool:
         """
         Cette méthode permet de vérifier si le neurone est activé.
         """
@@ -35,11 +35,11 @@ class PorteLogique(Neurone):
         self.enfants = enfants
         self.negatif = negatif
 
-    def evaluer(self, obstacles: List[Obstacle]) -> bool:
+    def evaluer(self, obstacles, coos_bob) -> bool:
         ou = False
         et = True
         for e in self.enfants:
-            b = e.evaluer(obstacles)
+            b = e.evaluer(obstacles, coos_bob)
             et = et and b
             ou = ou or b
         if self.negatif:
@@ -49,6 +49,11 @@ class PorteLogique(Neurone):
             return et
         else:
             return ou
+
+    def copy(self):
+        enfants = list(map(lambda n: n.copy(), self.enfants))
+        P = PorteLogique(self.operateur, self.negatif, enfants)
+        return P
 
     def __str__(self):
         return f"PL({'et' if self.operateur else 'ou'},{'non' if self.negatif else 'oui'},{str(self.enfants)})"
@@ -67,10 +72,12 @@ class DetecteurObstacle(Neurone):
         self.coordonees = coordonees
         self.bloc_type = bloc_type
 
-    def evaluer(self, obstacles: List[Obstacle]) -> bool:
+    def evaluer(self, obstacles, coos_bob) -> bool:
+        x = self.coordonees[0] - coos_bob[0]
+        y = self.coordonees[1] - coos_bob[1]
         for obstacle in obstacles:
             if (obstacle.type == self.bloc_type):
-                if (obstacle.p2[0] > self.coordonees[0] > obstacle.p1[0]) and (obstacle.p2[1] > self.coordonees[1] > obstacle.p1[1]):
+                if (obstacle.p2[0] > x > obstacle.p1[0]) and (obstacle.p2[1] > y > obstacle.p1[1]):
                     return True
         return False
 
@@ -91,10 +98,15 @@ class DetecteurObstacle(Neurone):
         """
         Créer une porte logique de manière aléatoire
         """
-        e = deepcopy(self)
+        e = self.copy()
         operateur = bool(randint(0, 1))
         negatif = bool(randint(0, 1))
         self = PorteLogique(operateur, negatif, [e])
+
+    def copy(self):
+        D = DetecteurObstacle(
+            [self.coordonees[0], self.coordonees[1]], copy(self.bloc_type))
+        return D
 
     def __str__(self):
         return f"DO({self.bloc_type}, {self.coordonees})"
@@ -134,7 +146,7 @@ class IA:
                 # Changement du type de bloc
                 neurone.bloc_type = "p" if neurone.bloc_type == "bs" else "bs"
 
-            if randint(1, 4) == 4:
+            if randint(1, 2) == 2:
                 # Mutation en porte logique
                 neurone.passer_en_porte_logique()
 
@@ -147,7 +159,7 @@ class IA:
                 # Changement du négatif
                 neurone.negatif = not neurone.negatif
 
-            if randint(1, 3) == 3:
+            if randint(1, 3) != 3:
                 # Creation d'une neurone
                 for _ in range(randint(0, 2 - len(neurone.enfants))):
                     neurone.enfants.append(DetecteurObstacle.nouveau())
@@ -161,6 +173,11 @@ class IA:
     def reset(self):
         self.joueur = Joueur.nouveau()
         self.score = 0
+
+    def copy(self):
+        I = IA()
+        I.reseau = self.reseau.copy()
+        return I
 
     def __bool__(self):
         return bool(self.joueur)

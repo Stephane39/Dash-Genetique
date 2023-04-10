@@ -3,6 +3,7 @@ from typing import List, Tuple
 from ressources import *
 from random import choice
 
+
 class Obstacle:
     """
     pour les types:
@@ -60,16 +61,14 @@ class Joueur:
         return Joueur(LARGEUR//2-25, HAUTEUR_SOL - BOB_HAUTEUR,
                       HAUTEUR_SOL-BOB_HAUTEUR)
 
-    def saut(self, frame: int, screen: Surface) -> Tuple[bool, int]:
+    def saut(self, frame: int) -> Tuple[bool, int]:
         """
         saut() permet de faire sauter BOB en l'affichant un peu plus haut à chaque appel.
         La fonction renvoie False quand l'animation est fini.
         """
         if frame < self.HAUTEUR_SAUT:
             frame += 1
-            screen.blit(FILL, (self.BOB_X, self.BOB_Y))
             self.BOB_Y -= self.VITESSE
-            screen.blit(self.image, (self.BOB_X, self.BOB_Y))
             return True, frame
         else:
             return False, -1

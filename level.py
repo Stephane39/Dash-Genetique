@@ -1,11 +1,12 @@
 from ressources import *
 from environnement import *
 from neuronal_network import *
+from pygame import surface
 
 
 class Level:
 
-    def __init__(self, screen: Surface, *obstacles: Obstacle):
+    def __init__(self, screen: surface.Surface, *obstacles: Obstacle):
         self.screen = screen
         self.largeur_ecran = self.screen.get_width()
         self.obstacles = list(sorted(obstacles, key=lambda ob: ob.p1[0]))
@@ -70,7 +71,7 @@ class Level:
         self.screen.blit(SOL, (self.sol2_pos, HAUTEUR_SOL))
         pass
 
-    def start(self, joueurs: List[IA]):
+    def start(self, joueurs: List[IA], fps: int = 0):
         """
         Fonction principale qui tourne tant que le jeu n'est pas fini
         """
@@ -95,10 +96,11 @@ class Level:
                 # SAUT
                 if bob.est_en_train_de_sauter:
                     bob.est_en_train_de_sauter, bob.frame = bob.saut(
-                        bob.frame, self.screen)
+                        bob.frame)
                 bob.actualiser_surface(list(self.get_obstacles()))
                 # Lecture des events
-                if ia.reseau.evaluer(list(self.get_obstacles())):  # type: ignore
+                # type: ignore
+                if ia.reseau.evaluer(list(self.get_obstacles()), [ia.joueur.BOB_X, ia.joueur.BOB_Y]):
                     bob.est_en_train_de_sauter, bob.frame, bob.V = True, 0, 0
                 # Affichage de la distance parcouru
 
@@ -106,11 +108,11 @@ class Level:
             self.defilement_obstacle()
             self.defilement_sol()
             pygame.display.update()
-            clock.tick(60)
+            clock.tick(fps)
             i += 1
 
     @classmethod
-    def level_1(cls, screen: Surface):
+    def level_1(cls, screen: surface.Surface):
         """
         Fonction de création des obstacles du niveau.
         """
@@ -143,7 +145,7 @@ class Level:
         return niveau
 
     @classmethod
-    def level_2(cls, screen: Surface):
+    def level_2(cls, screen: surface.Surface):
         """
         Fonction de création des obstacles du niveau.
         """
