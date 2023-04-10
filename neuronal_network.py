@@ -55,6 +55,10 @@ class PorteLogique(Neurone):
         P = PorteLogique(self.operateur, self.negatif, enfants)
         return P
 
+    @classmethod
+    def nouveau(cls):
+        return PorteLogique(bool(randint(0, 1)), bool(randint(0, 1)), [])
+
     def __str__(self):
         return f"PL({'et' * self.operateur + 'ou' * (1-self.operateur)}, {''.join(map(str, self.enfants))})"
 
@@ -162,12 +166,14 @@ class IA:
                 # Changement du négatif
                 neurone.negatif = not neurone.negatif
 
-            if randint(1, 4) != 4:
+            if randint(1, 4) == 4:
                 # Creation d'une neurone
-                for _ in range(randint(0, 2 - len(neurone.enfants))):
+                if not randint(0, 2):
+                    neurone.enfants.append(PorteLogique.nouveau())
+                else:
                     neurone.enfants.append(DetecteurObstacle.nouveau())
 
-            if randint(1, 1):
+            if randint(0, 1):
                 # Mutation des enfants
                 for enfant in neurone.enfants:
                     if randint(0, 1):

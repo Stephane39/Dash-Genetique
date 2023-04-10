@@ -14,8 +14,8 @@ class EntraineurIA:
     def muter_IAs(self):
         L = len(self.IAs)
         M = int(L*(10/100))
-        D = int(L*(70/100)/M)
-        G = int(L*(20/100))
+        D = int(L*(50/100)/M)
+        G = int(L*(40/100))
         # sauvegarde de 10% des meilleurs IAs pour la génération suivant
         self.IAs = self.IAs[:M]
         print(self.IAs[0].reseau)
@@ -34,7 +34,7 @@ class EntraineurIA:
             self.IAs.append(IA())
 
     def commencer(self):
-        for _ in range(10):
+        for _ in range(100):
             screen: pygame.surface.Surface = pygame.display.set_mode(
                 (LARGEUR, HAUTEUR))
             l = self.get_level(screen)
