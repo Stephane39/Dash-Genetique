@@ -56,10 +56,10 @@ class PorteLogique(Neurone):
         return P
 
     def __str__(self):
-        return f"PL({'et' if self.operateur else 'ou'},{'non' if self.negatif else 'oui'},{str(self.enfants)})"
+        return f"PL({'et' * self.operateur + 'ou' * (1-self.operateur)}, {''.join(map(str, self.enfants))})"
 
     def __repr__(self):
-        return str(self)
+        return f"PL({'et' if self.operateur else 'ou'},{'non' if self.negatif else 'oui'},{str(self.enfants)})"
 
 
 class DetecteurObstacle(Neurone):
@@ -73,8 +73,8 @@ class DetecteurObstacle(Neurone):
         self.bloc_type = bloc_type
 
     def evaluer(self, obstacles, coos_bob) -> bool:
-        x = self.coordonees[0] - coos_bob[0]
-        y = self.coordonees[1] - coos_bob[1]
+        x = coos_bob[0] + self.coordonees[0]
+        y = coos_bob[1] + self.coordonees[1]
         for obstacle in obstacles:
             if (obstacle.type == self.bloc_type):
                 if (obstacle.p2[0] > x > obstacle.p1[0]) and (obstacle.p2[1] > y > obstacle.p1[1]):
@@ -90,7 +90,7 @@ class DetecteurObstacle(Neurone):
         Créer un nouveau neurone detecteur d'obstacle random
         """
         coos: List[float] = [
-            randint(LARGEUR//2, LARGEUR), randint(250, HAUTEUR_SOL)]
+            randint(0, LARGEUR//2), randint(-HAUTEUR_SOL, HAUTEUR_SOL)]
         bloc_type = choice(cls.types_obstacles)
         return DetecteurObstacle(coos, bloc_type)
 
@@ -101,7 +101,7 @@ class DetecteurObstacle(Neurone):
         e = self.copy()
         operateur = bool(randint(0, 1))
         negatif = bool(randint(0, 1))
-        self = PorteLogique(operateur, negatif, [e])
+        return PorteLogique(operateur, negatif, [e])
 
     def copy(self):
         D = DetecteurObstacle(
@@ -110,6 +110,9 @@ class DetecteurObstacle(Neurone):
 
     def __str__(self):
         return f"DO({self.bloc_type}, {self.coordonees})"
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class IA:
@@ -148,9 +151,9 @@ class IA:
 
             if randint(1, 2) == 2:
                 # Mutation en porte logique
-                neurone.passer_en_porte_logique()
+                neurone = neurone.passer_en_porte_logique()
 
-        if isinstance(neurone, PorteLogique):
+        elif isinstance(neurone, PorteLogique):
             if randint(1, 5) == 5:
                 # Changement du type booléen
                 neurone.operateur = not neurone.operateur
@@ -159,16 +162,17 @@ class IA:
                 # Changement du négatif
                 neurone.negatif = not neurone.negatif
 
-            if randint(1, 3) != 3:
+            if randint(1, 4) != 4:
                 # Creation d'une neurone
                 for _ in range(randint(0, 2 - len(neurone.enfants))):
                     neurone.enfants.append(DetecteurObstacle.nouveau())
 
-            if randint(0, 1):
+            if randint(1, 1):
                 # Mutation des enfants
                 for enfant in neurone.enfants:
                     if randint(0, 1):
                         cls.muter(enfant)
+        return neurone
 
     def reset(self):
         self.joueur = Joueur.nouveau()

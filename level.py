@@ -100,9 +100,13 @@ class Level:
                 bob.actualiser_surface(list(self.get_obstacles()))
                 # Lecture des events
                 # type: ignore
-                if ia.reseau.evaluer(list(self.get_obstacles()), [ia.joueur.BOB_X, ia.joueur.BOB_Y]):
+                if (ia.reseau.evaluer(list(self.get_obstacles()), [ia.joueur.BOB_X, ia.joueur.BOB_Y])) and (not bob.est_en_train_de_sauter) and (bob.BOB_Y == bob.surface_actu):
                     bob.est_en_train_de_sauter, bob.frame, bob.V = True, 0, 0
-                # Affichage de la distance parcouru
+
+            # Ferme le jeu si une touche est pressé.
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
 
             # DEFILEMENT
             self.defilement_obstacle()
