@@ -3,6 +3,7 @@ from abc import abstractmethod
 from random import randint, choice
 from ressources import LARGEUR, HAUTEUR
 from copy import deepcopy
+from environnement import *
 
 
 class Neurone:
@@ -51,7 +52,7 @@ class DetecteurObstacle(Neurone):
     def evaluer(self, obstacles: List[Obstacle]) -> bool:
         for obstacle in obstacles:
             if (obstacle.type == self.bloc_type):
-                if (obstacle.p2[0] > self.coordonees[0] > obstacle.p1[0]) and (obstacle.p1[1] > self.coordonees[1] > obstacle.p2[1]):
+                if (obstacle.p2[0] > self.coordonees[0] > obstacle.p1[0]) and (obstacle.p2[1] > self.coordonees[1] > obstacle.p1[1]):
                     return True
         return False
 
@@ -61,9 +62,9 @@ class DetecteurObstacle(Neurone):
     @classmethod
     def nouveau(cls):
         """
-        creer un truc random
+        Créer un nouveau neurone detecteur d'obstacle random
         """
-        coos = [randint(0, LARGEUR-1), randint(0, HAUTEUR-1)]
+        coos = [randint(LARGEUR//2, LARGEUR), randint(250, HAUTEUR_SOL)]
         bloc_type = choice(cls.types_obstacles)
         return DetecteurObstacle(coos, bloc_type)
 
@@ -121,9 +122,9 @@ class IA:
                 # Changement du négatif
                 neurone.negatif = not neurone.negatif
 
-            if randint(1, 10) == 10:
+            if randint(1, 3) == 3:
                 # Creation d'une neurone
-                for _ in range(randint(1, 2)):
+                for _ in range(randint(0, 2 - len(neurone.enfants))):
                     neurone.enfants.append(DetecteurObstacle.nouveau())
 
             if randint(0, 1):
@@ -131,3 +132,4 @@ class IA:
                 for enfant in neurone.enfants:
                     if randint(0, 1):
                         self.muter(enfant)
+
