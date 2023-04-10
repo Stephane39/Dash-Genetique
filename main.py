@@ -16,8 +16,7 @@ def play():
     pour lancer le jeu.
     """
     # Création du niveau (LVL1)
-    generator = partial(Level.level_2, screen)
-    E = EntraineurIA(generator, 10)
+    E = EntraineurIA(Level.level_2, 10)
     E.commencer()
     pass
 

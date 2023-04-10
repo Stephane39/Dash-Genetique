@@ -16,11 +16,15 @@ class Neurone:
         pass
 
     @abstractmethod
-    def __str__(self):
+    def copy(self):
         pass
 
     @abstractmethod
-    def __repr__(self):
+    def __str__(self) -> str:
+        pass
+
+    @abstractmethod
+    def __repr__(self) -> str:
         pass
 
 
