@@ -131,9 +131,9 @@ class Level:
         Fonction de création des obstacles du niveau.
         """
         liste_obstacle: List[Obstacle] = []
+
         liste_obstacle.append(Obstacle(PIQUE, [1000, 250], [1050, 300], "p"))
-        liste_obstacle.append(
-            Obstacle(PIQUE_REVERSE, [1000, 100], [1050, 150], "p"))
+        liste_obstacle.append(Obstacle(PIQUE_REVERSE, [1000, 100], [1050, 150], "p"))
         liste_obstacle.append(Obstacle(BLOC, [1000, 50], [1050, 100], "bs"))
         liste_obstacle.append(Obstacle(BLOC, [1000, 0], [1050, 50], "bs"))
         liste_obstacle.append(Obstacle(BLOC, [1050, 250], [1100, 300], "bs"))
@@ -141,8 +141,7 @@ class Level:
         liste_obstacle.append(Obstacle(BLOC, [1320, 200], [1370, 250], "bs"))
         liste_obstacle.append(Obstacle(BLOC, [1500, 200], [1550, 250], "bs"))
         liste_obstacle.append(Obstacle(BLOC, [1550, 200], [1600, 250], "bs"))
-        liste_obstacle.append(
-            Obstacle(PIQUE_REVERSE, [1600, 100], [1650, 150], "p"))
+        liste_obstacle.append(Obstacle(PIQUE_REVERSE, [1600, 100], [1650, 150], "p"))
         liste_obstacle.append(Obstacle(BLOC, [1600, 50], [1650, 100], "bs"))
         liste_obstacle.append(Obstacle(BLOC, [1600, 0], [1650, 50], "bs"))
         liste_obstacle.append(Obstacle(PIQUE, [1580, 250], [1630, 300], "p"))
@@ -153,8 +152,20 @@ class Level:
         liste_obstacle.append(Obstacle(PIQUE, [2200, 250], [2250, 300], "p"))
         liste_obstacle.append(Obstacle(PIQUE, [2250, 250], [2300, 300], "p"))
         liste_obstacle.append(Obstacle(BLOC, [2300, 250], [2350, 300], "bs"))
-        liste_obstacle.append(
-            Obstacle(GIGACHAD, [2600, 50], [2650, 100], "bs"))
+        liste_obstacle.append(Obstacle(GIGACHAD, [2600, 50], [2650, 100], "bs"))
+
+        liste_obstacle.append(Obstacle(BLOC, [2900, 250], [2950, 300], "bs"))
+        liste_obstacle.append(Obstacle(BLOC, [3165, 200], [3215, 250], "bs"))
+
+        liste_obstacle.append(Obstacle(BLOC, [3300, 150], [3350, 200], "bs"))
+        liste_obstacle.append(Obstacle(BLOC, [3350, 150], [3400, 200], "bs"))
+        liste_obstacle.append(Obstacle(BLOC, [3400, 150], [3450, 200], "bs"))
+
+        liste_obstacle.append(Obstacle(BLOC, [3450, 150], [3590, 200], "bs"))
+        liste_obstacle.append(Obstacle(BLOC, [3450, 100], [3590, 150], "bs"))
+        liste_obstacle.append(Obstacle(BLOC, [3450, 50], [3590, 100], "bs"))
+        liste_obstacle.append(Obstacle(BLOC, [3450, 0], [3590, 50], "bs"))
+
         niveau = Level(screen, *liste_obstacle)
         return niveau
 

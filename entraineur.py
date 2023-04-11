@@ -18,7 +18,7 @@ class EntraineurIA:
         G = int(L*(40/100))
         # sauvegarde de 10% des meilleurs IAs pour la génération suivant
         self.IAs = self.IAs[:M]
-        print(self.IAs[0].reseau)
+        #print(self.IAs[0].reseau)
         # Ajout de 50% d'IAs qui sont des versions muté des 10% de meilleur
         for ia in list(self.IAs):
             # reset des attributs des IAs
@@ -28,7 +28,7 @@ class EntraineurIA:
                 self.IAs.append(enfant)
         for ia in self.IAs:
             ia.reseau = IA.muter(ia.reseau)
-            print(ia.reseau)
+            #print(ia.reseau)
         # ajout de 40% de nouvelles IAs générer aléatoirement
         for _ in range(G):
             self.IAs.append(IA())
@@ -42,12 +42,26 @@ class EntraineurIA:
         nbGeneration = 0
         score = 0
         for _ in range(100):
+            #lancement de la simulation de la génération nbGeneration
             l = self.get_level(screen)
             l.start(self.IAs, 160, nbGeneration, score)
+
+            #Ajustement du score d'une IA en fonction de la taille de son réseau
+            """
+            for ia in self.IAs:
+                ia.calculer_taille()
+                ia.score = ia.score - ia.taille_reseau
+            """
+
+            #Tri des IA en fonction de  leur score lors cette génération
             self.IAs.sort(key=lambda ia: (
                 ia.joueur.alive, ia.score), reverse=True)
+            
+            #sauvegarde de la meuilleur ia de la géneration
             self.save("./saved.txt")
-            score = sum(map(lambda ia: ia.score, self.IAs))//len(self.IAs)
+
+            #ajustement des variables d'affichages et mutation des IAs pour la génération future
+            score = (sum(map(lambda ia: ia.score, self.IAs))//len(self.IAs))
             nbGeneration+=1
             self.muter_IAs()
 

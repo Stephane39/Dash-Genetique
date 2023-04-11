@@ -50,6 +50,18 @@ class PorteLogique(Neurone):
         else:
             return ou
 
+    def taille(self)->int:
+        """
+        Fonction qui renvoie la taille du reseau neuronal.
+        """
+        if self.enfants == []:
+            return 1
+        else:
+            c = 0
+            for enfant in self.enfants:
+                c+=enfant.taille()
+        return c
+
     def copy(self):
         enfants = list(map(lambda n: n.copy(), self.enfants))
         P = PorteLogique(self.operateur, self.negatif, enfants)
@@ -111,6 +123,9 @@ class DetecteurObstacle(Neurone):
         D = DetecteurObstacle(
             [self.coordonees[0], self.coordonees[1]], copy(self.bloc_type))
         return D
+    
+    def taille(self)->int:
+        return 1
 
     def __str__(self):
         return f"DO({self.bloc_type}, {self.coordonees})"
@@ -125,6 +140,7 @@ class IA:
         self.reseau: Neurone = DetecteurObstacle.nouveau()
         self.joueur = Joueur.nouveau()
         self.score = 0
+        self.taille_reseau:int = -1
 
     @classmethod
     def muter(cls, neurone: Neurone):
@@ -177,6 +193,9 @@ class IA:
                 if randint(0, 1):
                     cls.muter(enfant)
         return neurone
+
+    def calculer_taille(self)->int:
+        self.taille_reseau = self.reseau.taille()
 
     def reset(self):
         self.joueur = Joueur.nouveau()
