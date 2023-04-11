@@ -14,12 +14,14 @@ class EntraineurIA:
     def muter_IAs(self):
         L = len(self.IAs)
         M = int(L*(10/100))
-        D = int(L*(50/100)/M)
-        G = int(L*(40/100))
+        D = int(L*(70/100)/M)
+        G = int(L*(20/100))
+        print(L)
         # sauvegarde de 10% des meilleurs IAs pour la génération suivant
+        meilleur = self.IAs[0]
         self.IAs = self.IAs[:M]
         #print(self.IAs[0].reseau)
-        # Ajout de 50% d'IAs qui sont des versions muté des 10% de meilleur
+        # Ajout de 70% d'IAs qui sont des versions muté des 10% de meilleur
         for ia in list(self.IAs):
             # reset des attributs des IAs
             ia.reset()
@@ -29,9 +31,10 @@ class EntraineurIA:
         for ia in self.IAs:
             ia.reseau = IA.muter(ia.reseau)
             #print(ia.reseau)
-        # ajout de 40% de nouvelles IAs générer aléatoirement
+        # ajout de 20% de nouvelles IAs générer aléatoirement
         for _ in range(G):
             self.IAs.append(IA())
+        self.IAs.append(meilleur.copy())
 
     def save(self, path: str):
         with open(path, "w") as file:
@@ -41,7 +44,7 @@ class EntraineurIA:
         screen: pygame.surface.Surface = pygame.display.set_mode((LARGEUR, HAUTEUR))
         nbGeneration = 0
         score = 0
-        for _ in range(100):
+        for _ in range(500):
             #lancement de la simulation de la génération nbGeneration
             l = self.get_level(screen)
             l.start(self.IAs, 160, nbGeneration, score)

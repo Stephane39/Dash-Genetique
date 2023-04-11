@@ -69,7 +69,7 @@ class PorteLogique(Neurone):
 
     @classmethod
     def nouveau(cls):
-        return PorteLogique(bool(randint(0, 1)), bool(randint(0, 1)), [])
+        return PorteLogique(bool(randint(0, 1)), bool(randint(0, 1)), [DetecteurObstacle.nouveau()])
 
     def __str__(self):
         return f"PL({'et' if self.operateur else 'ou'}, {'non' if self.negatif else 'oui'}, {'|'.join(map(str, self.enfants))})"
@@ -158,14 +158,14 @@ class IA:
         if isinstance(neurone, DetecteurObstacle):
             if randint(0, 1):
                 # Changement des coordonnées
-                decalage_X = randint(-10, 10)
-                decalage_Y = randint(-10, 10)
+                decalage_X = randint(-20, 20)
+                decalage_Y = randint(-20, 20)
                 neurone.coordonees[0] = min(
                     neurone.coordonees[0] + decalage_X, LARGEUR)
                 neurone.coordonees[1] = min(
                     neurone.coordonees[1] + decalage_Y, HAUTEUR)
 
-            if randint(1, 10) == 10:
+            if randint(1, 5) == 5:
                 # Changement du type de bloc
                 neurone.bloc_type = "p" if neurone.bloc_type == "bs" else "bs"
 
@@ -174,7 +174,7 @@ class IA:
                 neurone = neurone.passer_en_porte_logique()
 
         elif isinstance(neurone, PorteLogique):
-            if randint(1, 5) == 5:
+            if randint(1, 10) == 10:
                 # Changement du type booléen
                 neurone.operateur = not neurone.operateur
 
@@ -184,18 +184,19 @@ class IA:
 
             if randint(1, 4) == 4:
                 # Creation d'une neurone
-                if not randint(0, 2):
+                if randint(0, 2) in [0, 1]:
                     neurone.enfants.append(PorteLogique.nouveau())
                 else:
                     neurone.enfants.append(DetecteurObstacle.nouveau())
-            # Mutation des enfants
+
+            # Mutation/Supresion des enfants 
             for enfant in neurone.enfants:
                 if randint(0, 1):
                     cls.muter(enfant)
         return neurone
 
     def calculer_taille(self)->int:
-        self.taille_reseau = self.reseau.taille()
+        self.taille_reseau = self.taille_reseau.taille()
 
     def reset(self):
         self.joueur = Joueur.nouveau()
