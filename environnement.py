@@ -17,6 +17,9 @@ class Obstacle:
         self.p2 = p2
         self.type = type
         pass
+    
+    def clone(self):
+        return Obstacle(self.IMAGE, self.p1.copy(), self.p2.copy(), self.type)
 
     def is_hit(self, xy1: List[float], xy2: List[float]) -> bool:
         """

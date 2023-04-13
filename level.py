@@ -1,12 +1,13 @@
 from ressources import *
 from environnement import *
 from neuronal_network import *
+from random_map import *
 from pygame import surface
 
 
 class Level:
 
-    def __init__(self, screen: surface.Surface, *obstacles: Obstacle):
+    def __init__(self, screen: surface.Surface, obstacles: Obstacle):
         self.screen = screen
         self.largeur_ecran = self.screen.get_width()
         self.obstacles = list(sorted(obstacles, key=lambda ob: ob.p1[0]))
@@ -190,8 +191,8 @@ class Level:
         liste_obstacle.append(Obstacle(BLOC, [3250, 0], [3300, 50], "bs"))
 
 
-
-        niveau = Level(screen, *liste_obstacle)
+        print(liste_obstacle)
+        niveau = Level(screen, liste_obstacle)
         return niveau
 
     @classmethod
@@ -201,5 +202,12 @@ class Level:
         """
         liste_obstacle: List[Obstacle] = []
         liste_obstacle.append(Obstacle(BLOC, [1000, 250], [1050, 300], "bs"))
-        niveau = Level(screen, *liste_obstacle)
+        niveau = Level(screen, liste_obstacle)
         return niveau
+    
+    @classmethod
+    def level_random(cls, screen: surface.Surface):
+        """
+        Fonction de création des obstacles du niveau.
+        """
+        return Level(screen, randomLevel.nouveau().map)

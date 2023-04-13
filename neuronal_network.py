@@ -106,7 +106,7 @@ class DetecteurObstacle(Neurone):
         Créer un nouveau neurone detecteur d'obstacle random
         """
         coos: List[float] = [
-            randint(0, LARGEUR//2), randint(-HAUTEUR_SOL, HAUTEUR_SOL)]
+            randint(0, LARGEUR//2), randint(0, HAUTEUR_SOL)]
         bloc_type = choice(cls.types_obstacles)
         return DetecteurObstacle(coos, bloc_type)
 
@@ -193,6 +193,8 @@ class IA:
             for enfant in neurone.enfants:
                 if randint(0, 1):
                     cls.muter(enfant)
+                if randint(1, 7) == 7:
+                    neurone.enfants.remove(enfant)
         return neurone
 
     def calculer_taille(self)->int:
