@@ -1,1 +1,1 @@
-PL(ou, oui, DO(bs, [232, 37])|DO(bs, [312, 94])|PL(et, oui, DO(p, [108, -88])|DO(p, [84, 225])|DO(p, [291, 119]))|PL(et, oui, DO(p, [115, 27])|PL(ou, non, DO(p, [88, 63])|PL(et, oui, DO(p, [29, 22]))))|PL(ou, oui, DO(p, [315, -18]))|PL(et, oui, DO(bs, [319, 194])|PL(et, oui, DO(p, [50, -289])|PL(et, oui, DO(bs, [240, 7])|DO(bs, [108, -140])))|DO(p, [80, -198]))|PL(et, oui, DO(p, [269, -253]))|DO(bs, [290, -310]))
+PL(ou, non, DO(bs, [220, -228]))
