@@ -1,1 +1,1 @@
-PL(ou, oui, DO(bs, [220, 19])|PL(ou, oui, DO(p, [11, 76])|PL(et, oui, DO(bs, [332, 243])))|PL(et, oui, DO(p, [135, 7])))
+PL(et, non, PL(ou, non, DO(bs, [210, 47])|DO(p, [290, 260]))|PL(ou, non, DO(p, [6, 53])|PL(ou, oui, DO(p, [63, 136]))))

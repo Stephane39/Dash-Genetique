@@ -92,6 +92,7 @@ class Joueur:
         éléments par exemple.
         """
         changed = False
+        self.surface_actu = self.surface
         for obstacle in liste_obstacle:
             if (obstacle.type == "bs") and (self.BOB_Y + self.HAUTEUR <= obstacle.p1[1]):
                 if (obstacle.p1[0] <= self.BOB_X <= obstacle.p2[0]) or (obstacle.p1[0] <= self.BOB_X + self.LARGEUR <= obstacle.p2[0]):

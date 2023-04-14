@@ -20,6 +20,24 @@ def liste_etape()->List[List[Obstacle]]:
     etape1.append(Obstacle(BLOC, [450, 0], [500, 50], "bs"))
     liste_etape.append(etape1)
 
+    etape2 = []
+    etape2.append(Obstacle(BLOC, [0, 250], [50, 300], "bs"))
+    etape2.append(Obstacle(PIQUE, [50, 250], [100, 300], "p"))
+    etape2.append(Obstacle(PIQUE, [100, 250], [150, 300], "p"))
+    etape2.append(Obstacle(PIQUE, [150, 250], [200, 300], "p"))
+    etape2.append(Obstacle(BLOC, [250, 200], [300, 250], "bs"))
+    etape2.append(Obstacle(BLOC, [500, 150], [550, 200], "bs"))
+    etape2.append(Obstacle(BLOC, [750, 100], [800, 150], "bs"))
+    etape2.append(Obstacle(BLOC, [850, 150], [900, 200], "bs"))
+    etape2.append(Obstacle(PIQUE_REVERSE, [900, 30], [950, 80], "p"))
+    etape2.append(Obstacle(BLOC, [900,-20], [950, 30], "bs"))
+    etape2.append(Obstacle(BLOC, [950, 200], [1000, 250], "bs"))
+    etape2.append(Obstacle(PIQUE_REVERSE, [1000, 0], [1050, 50], "p"))
+    etape2.append(Obstacle(PIQUE, [1000, 250], [1050, 300], "p"))
+    etape2.append(Obstacle(BLOC, [1050, 250], [1100, 300], "bs"))
+    etape2.append(Obstacle(PIQUE, [1050, 200], [1100, 250], "p"))
+    liste_etape.append(etape2)
+
     etape3 = []
     etape3.append(Obstacle(PIQUE, [0, 250], [50, 300], "p"))
     etape3.append(Obstacle(PIQUE_REVERSE, [0, 100], [50, 150], "p"))
