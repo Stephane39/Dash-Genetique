@@ -51,7 +51,6 @@ class Level:
         """
         for obstacle in self.get_obstacles(False):
             x, y = obstacle.p1
-            self.screen.blit(FILL, (x, y))
             obstacle.defilement(self.SPEED)
             x, y = obstacle.p1
             self.screen.blit(obstacle.IMAGE, (x, y))
@@ -80,9 +79,9 @@ class Level:
         i = 0
 
         font = pygame.font.Font('freesansbold.ttf', 16)
-        Text_Generation = font.render('Generation: ' + str(nbGeneration) , True, (255, 255, 255), (163, 73, 164))
+        Text_Generation = font.render('Generation: ' + str(nbGeneration) , True, (255, 255, 255))
 
-        Text_Score = font.render('Score: ' + str(score) , True, (255, 255, 255), (163, 73, 164))
+        Text_Score = font.render('Score: ' + str(score) , True, (255, 255, 255))
         # loop
         while any(joueurs) and self.obstacles[-1].p2[0] > 0:
             self.screen.blit(FOND, (0, 0))
@@ -153,7 +152,6 @@ class Level:
         liste_obstacle.append(Obstacle(PIQUE, [2200, 250], [2250, 300], "p"))
         liste_obstacle.append(Obstacle(PIQUE, [2250, 250], [2300, 300], "p"))
         liste_obstacle.append(Obstacle(BLOC, [2300, 250], [2350, 300], "bs"))
-        liste_obstacle.append(Obstacle(GIGACHAD, [2600, 50], [2650, 100], "bs"))
 
         liste_obstacle.append(Obstacle(BLOC, [2300, 250], [2350, 300], "bs"))
         liste_obstacle.append(Obstacle(BLOC, [2350, 250], [2400, 300], "bs"))
@@ -183,10 +181,10 @@ class Level:
 
         liste_obstacle.append(Obstacle(PIQUE_REVERSE, [2950, 0], [3000, 50], "p"))
 
-        liste_obstacle.append(Obstacle(PIQUE_REVERSE, [3200, 250], [3250, 300], "p"))
+        liste_obstacle.append(Obstacle(PIQUE, [3200, 250], [3250, 300], "p"))
         liste_obstacle.append(Obstacle(BLOC, [3250, 250], [3300, 300], "bs"))
 
-        liste_obstacle.append(Obstacle(PIQUE, [3250, 100], [3300, 150], "p"))
+        liste_obstacle.append(Obstacle(PIQUE_REVERSE, [3250, 100], [3300, 150], "p"))
         liste_obstacle.append(Obstacle(BLOC, [3250, 50], [3300, 100], "bs"))
         liste_obstacle.append(Obstacle(BLOC, [3250, 0], [3300, 50], "bs"))
 

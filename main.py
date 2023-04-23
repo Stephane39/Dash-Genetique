@@ -16,7 +16,7 @@ def play():
     pour lancer le jeu.
     """
     # Création du niveau (LVL1)
-    E = EntraineurIA(Level.level_random, 100)
+    E = EntraineurIA(Level.level_1, 100)
     E.commencer()
     pass
 
