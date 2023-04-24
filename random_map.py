@@ -87,5 +87,3 @@ class randomLevel:
         new.createRandomLevel()
         return new
 
-print(randomLevel.nouveau().map)
-
