@@ -1,7 +1,7 @@
 # Dash Genetique
 
 Projet pour [LES TROPHEES NSI](https://trophees-nsi.fr/),
-ce projet vise à entraîner une IA grâce à un algorithme génétique pour la faire jouer à une version revisité de Géométrie Dash.
+ce projet vise à entraîner une IA grâce à un algorithme génétique pour la faire jouer à une version revisitée de Géométrie Dash.
 
 ## Auteurs
 
