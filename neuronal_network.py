@@ -4,6 +4,7 @@ from random import randint, choice
 from ressources import LARGEUR, HAUTEUR
 from copy import copy
 from environnement import *
+from typing_extensions import Self
 
 
 class Neurone:
@@ -16,7 +17,11 @@ class Neurone:
         pass
 
     @abstractmethod
-    def copy(self):
+    def copy(self) -> Self:
+        pass
+
+    @abstractmethod
+    def taille(self) -> int:
         pass
 
     @abstractmethod
@@ -50,7 +55,7 @@ class PorteLogique(Neurone):
         else:
             return ou
 
-    def taille(self)->int:
+    def taille(self) -> int:
         """
         Fonction qui renvoie la taille du reseau neuronal.
         """
@@ -59,7 +64,7 @@ class PorteLogique(Neurone):
         else:
             c = 0
             for enfant in self.enfants:
-                c+=enfant.taille()
+                c += enfant.taille()
         return c
 
     def copy(self):
@@ -123,8 +128,8 @@ class DetecteurObstacle(Neurone):
         D = DetecteurObstacle(
             [self.coordonees[0], self.coordonees[1]], copy(self.bloc_type))
         return D
-    
-    def taille(self)->int:
+
+    def taille(self) -> int:
         return 1
 
     def __str__(self):
@@ -140,7 +145,7 @@ class IA:
         self.reseau: Neurone = DetecteurObstacle.nouveau()
         self.joueur = Joueur.nouveau()
         self.score = 0
-        self.taille_reseau:int = -1
+        self.taille_reseau: int = -1
 
     @classmethod
     def muter(cls, neurone: Neurone):
@@ -189,7 +194,7 @@ class IA:
                 else:
                     neurone.enfants.append(DetecteurObstacle.nouveau())
 
-            # Mutation/Supresion des enfants 
+            # Mutation/Supresion des enfants
             for enfant in neurone.enfants:
                 if randint(0, 1):
                     cls.muter(enfant)
@@ -197,8 +202,8 @@ class IA:
                     neurone.enfants.remove(enfant)
         return neurone
 
-    def calculer_taille(self)->int:
-        self.taille_reseau = self.taille_reseau.taille()
+    def calculer_taille(self) -> None:
+        self.taille_reseau = self.reseau.taille()
 
     def reset(self):
         self.joueur = Joueur.nouveau()

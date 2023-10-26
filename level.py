@@ -7,7 +7,7 @@ from pygame import surface
 
 class Level:
 
-    def __init__(self, screen: surface.Surface, obstacles: Obstacle):
+    def __init__(self, screen: surface.Surface, obstacles: List[Obstacle]):
         self.screen = screen
         self.largeur_ecran = self.screen.get_width()
         self.obstacles = list(sorted(obstacles, key=lambda ob: ob.p1[0]))
@@ -71,7 +71,7 @@ class Level:
         self.screen.blit(SOL, (self.sol2_pos, HAUTEUR_SOL))
         pass
 
-    def start(self, joueurs: List[IA], fps: int = 160, nbGeneration:int = 0, score:int = 0):
+    def start(self, joueurs: List[IA], fps: int = 160, nbGeneration: int = 0, score: int = 0):
         """
         Fonction principale qui tourne tant que le jeu n'est pas fini
         """
@@ -79,16 +79,17 @@ class Level:
         i = 0
 
         font = pygame.font.Font('freesansbold.ttf', 16)
-        Text_Generation = font.render('Generation: ' + str(nbGeneration) , True, (255, 255, 255))
+        Text_Generation = font.render(
+            'Generation: ' + str(nbGeneration), True, (255, 255, 255))
 
-        Text_Score = font.render('Score: ' + str(score) , True, (255, 255, 255))
+        Text_Score = font.render('Score: ' + str(score), True, (255, 255, 255))
         # loop
         while any(joueurs) and self.obstacles[-1].p2[0] > 0:
             self.screen.blit(FOND, (0, 0))
 
-            #Affichage du nombre de généartion
+            # Affichage du nombre de généartion
             self.screen.blit(Text_Generation, (0, 0))
-            #Affichage du score de la génération précedente
+            # Affichage du score de la génération précedente
             self.screen.blit(Text_Score, (0, Text_Generation.get_size()[1]))
             for ia in joueurs:
                 bob = ia.joueur
@@ -133,7 +134,8 @@ class Level:
         liste_obstacle: List[Obstacle] = []
 
         liste_obstacle.append(Obstacle(PIQUE, [1000, 250], [1050, 300], "p"))
-        liste_obstacle.append(Obstacle(PIQUE_REVERSE, [1000, 100], [1050, 150], "p"))
+        liste_obstacle.append(
+            Obstacle(PIQUE_REVERSE, [1000, 100], [1050, 150], "p"))
         liste_obstacle.append(Obstacle(BLOC, [1000, 50], [1050, 100], "bs"))
         liste_obstacle.append(Obstacle(BLOC, [1000, 0], [1050, 50], "bs"))
         liste_obstacle.append(Obstacle(BLOC, [1050, 250], [1100, 300], "bs"))
@@ -141,7 +143,8 @@ class Level:
         liste_obstacle.append(Obstacle(BLOC, [1320, 200], [1370, 250], "bs"))
         liste_obstacle.append(Obstacle(BLOC, [1500, 200], [1550, 250], "bs"))
         liste_obstacle.append(Obstacle(BLOC, [1550, 200], [1600, 250], "bs"))
-        liste_obstacle.append(Obstacle(PIQUE_REVERSE, [1600, 100], [1650, 150], "p"))
+        liste_obstacle.append(
+            Obstacle(PIQUE_REVERSE, [1600, 100], [1650, 150], "p"))
         liste_obstacle.append(Obstacle(BLOC, [1600, 50], [1650, 100], "bs"))
         liste_obstacle.append(Obstacle(BLOC, [1600, 0], [1650, 50], "bs"))
         liste_obstacle.append(Obstacle(PIQUE, [1580, 250], [1630, 300], "p"))
@@ -169,10 +172,12 @@ class Level:
         liste_obstacle.append(Obstacle(PIQUE, [2850, 250], [2900, 300], "p"))
         liste_obstacle.append(Obstacle(PIQUE, [2900, 250], [2950, 300], "p"))
         liste_obstacle.append(Obstacle(BLOC, [2900, 150], [2950, 200], "bs"))
-        liste_obstacle.append(Obstacle(PIQUE_REVERSE, [2950, 0], [3000, 50], "p"))
+        liste_obstacle.append(
+            Obstacle(PIQUE_REVERSE, [2950, 0], [3000, 50], "p"))
         liste_obstacle.append(Obstacle(PIQUE, [3200, 250], [3250, 300], "p"))
         liste_obstacle.append(Obstacle(BLOC, [3250, 250], [3300, 300], "bs"))
-        liste_obstacle.append(Obstacle(PIQUE_REVERSE, [3250, 100], [3300, 150], "p"))
+        liste_obstacle.append(
+            Obstacle(PIQUE_REVERSE, [3250, 100], [3300, 150], "p"))
         liste_obstacle.append(Obstacle(BLOC, [3250, 50], [3300, 100], "bs"))
         liste_obstacle.append(Obstacle(BLOC, [3250, 0], [3300, 50], "bs"))
 
@@ -188,7 +193,7 @@ class Level:
         liste_obstacle.append(Obstacle(BLOC, [1000, 250], [1050, 300], "bs"))
         niveau = Level(screen, liste_obstacle)
         return niveau
-    
+
     @classmethod
     def level_random(cls, screen: surface.Surface):
         """
